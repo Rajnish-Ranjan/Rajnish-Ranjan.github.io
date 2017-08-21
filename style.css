@@ -29,4 +29,25 @@ table .ali{
 	background-color: #f1ffff;
 	font-family: Lucida Handwriting;
 	padding-top: 1%;
+	text-align: center;
+}
+.foot{
+	color: #88ff88;
+	background-color: blue;
+	font-size: 150%;
+	padding-left: 10%;
+	border-color: #88ff88;
+	border-width: 5%;
+	border-radius: 10% 10% 0% 0%;
+}
+#iframe{
+	background-color: blue;
+	margin-left: 5%;
+	color: white;
+	font-size: 200%;
+	text-align: left;
+	padding-left: 10%;
+	text-decoration: none;
+	font-family: cursive;
+	font-weight: 600;
 }
