@@ -6,36 +6,45 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.css">
 </head>
-<body class="bod">
+<body class="bod" style="background-color: #ff5520">
+<div>
 <div class="header">
 	<h1>Rajnish Kumar Ranjan</h1>
 </div><br>
 <div style="text-align: center;">
 	<table>
 		<td>
-			<tr><span style="padding-right: 4%;padding-left: 4%;border-radius: 40%;font-weight: 700;color: #00008b;background-color: white;">Home</span></tr>
-			<tr><span style="padding-right: 4%;padding-left: 4%;border-radius: 40%;font-weight: 700;color: #00008b;background-color: white;">Projects</span></tr>
-			<tr><span style="padding-right: 4%;padding-left: 4%;border-radius: 40%;font-weight: 700;color: #00008b;background-color: white;">Dance</span></tr>
-			<tr><span style="padding-right: 4%;padding-left: 4%;border-radius: 40%;font-weight: 700;color: #00008b;background-color: white;">Hindi Poems</span></tr>
+			<tr><a href="#" style="padding-right: 4%;padding-left: 4%;border-radius: 40%;font-weight: 700;color: #00008b;background-color: white;">Home</a></tr>
+			<tr><a href="#project" style="padding-right: 4%;padding-left: 4%;border-radius: 40%;font-weight: 700;color: #00008b;background-color: white;">Projects</a></tr>
+			<tr><a href="#" style="padding-right: 4%;padding-left: 4%;border-radius: 40%;font-weight: 700;color: #00008b;background-color: white;">Dance</a></tr>
+			<tr><a href="#poem" style="padding-right: 4%;padding-left: 4%;border-radius: 40%;font-weight: 700;color: #00008b;background-color: white;">Hindi Poems</a></tr>
 		</td>
 	</table>
 </div>
-<br><br><br><br><br><br><br><br>
+<br><br><br><br><br><br><br><br><br><br><br>
 <div style="text-align: center;">
 	<img src="Image/me.png" height="12%" width="12%"><br>
 	<a href="Resume.pdf" target="_blank"><button>RESUME</button></a>
 </div>
-<br><br><br><br><br><br><br>
-<div class="container">
+<br><br><br>
+<div class="container" id="project">
 	<div style="text-align: center;padding-left: 1%;">
 	<h2 class="heading">~ Projects ~</h2>
 	<div class="projects">
-		<h3>Website development for NGO Ek PAHAL</h3>
-		<iframe src="ekpahal.github.io" width="100%"></iframe>
+		<h3 style="color: blue;">Website development for NGO Ek PAHAL</h3>
+		<a href="https://ekpahal.github.io"><div id="iframe" style="width: 90%;height: 4em;"><br>
+			Ek PAHAL
+		</div></a>
 	</div>
+	<div class="projects">
+		<h3 style="color: blue;">Image Processing</h3>
+		<a href="https://www.github.com/rajnish"><div id="iframe" style="width: 90%;text-decoration: none;height: 4em;">
+			<br> Image Processing
+		</div></a><br><br>
+	</div>
+</div><br><br>
 </div>
-</div>
-<div class ="container"><div style="text-align: center;padding-left: 1%;">
+<div class ="container" id="poem"><div style="text-align: center;padding-left: 1%;">
 	<h2 class="heading">~ Hindi Poems ~</h2>
 </div>
 		<div class="col-sm-4">
@@ -122,7 +131,9 @@
 </div>
 		</div>
 </div>
-
-<footer>Contact Detail</footer>
+</div>
+<footer class="foot">Contact Detail
+<br><br><br>
+</footer>
 </body>
 </html>
