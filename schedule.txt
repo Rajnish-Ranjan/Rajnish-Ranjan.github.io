@@ -1,0 +1,343 @@
+//FCFS
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct process{
+	int id, at, bt, ct, tat, wt;
+};
+
+process a[100];
+int n;
+
+bool comp(process a, process b) {
+	if (a.at < b. at) return true;
+	if (a.id < b.id) return true;
+	return false;
+}
+int main() {
+	cout << "Enter no. of process = ";
+	cin >> n;
+	int x, y;
+	cout << "enter at - bt\n";
+	for (int i = 0; i < n; i++) {
+		cin >> x >> y;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].id = i + 1;
+	}
+    sort (a, a + n, comp);
+    int curr = 0;
+    for (int i = 0; i < n; i++) {
+		a[i].ct = curr + a[i].bt;
+        curr = a[i].ct;
+    }
+    for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+
+}
+//sjf
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct process{
+	int id, at, bt, ct, tat, wt;
+};
+
+bool comp(process a, process b) {
+	if (a.at < b.at) return 1;
+	return 0;
+}
+
+int n, x, y;
+process a[100];
+
+int main() {
+	cout << "Enter no. of processes = ";
+	cin >> n;
+    cout << "Enter at - bt\n";
+    for (int i = 0; i < n; i++) {
+		cin >> x >> y;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].id = i + 1;
+    }
+    sort(a, a + n, comp);
+    set<pair<int, int> > st;
+    int in = 1;
+    st.insert({a[0].bt, a[0].id});
+    int curr = a[0].at;
+    while (!st.empty()) {
+        auto ix = st.begin();
+        st.erase(st.begin());
+		a[(*ix).second - 1].ct = curr + (*ix).first;
+		curr = a[(*ix).second - 1].ct;
+		while (in < n) {
+			if (a[in].at <= curr) {
+				st.insert({a[in].bt, a[in].id});
+				in++;
+			} else break;
+		}
+    }
+    for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+}
+//srtf
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct process{
+	int at, bt, ct, tat, wt, id;
+};
+
+bool comp(process a, process b) {
+	if (a.at < b.at) return 1;
+	return 0;
+}
+
+process a[100];
+int n, x, y, swwi;
+
+int main() {
+	cout << "Enter no. of processes = ";
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		cin >> x >> y;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].id = i + 1;
+	}
+	sort (a, a + n, comp);
+    int curr = 0;
+    set<pair<int, int> > st;
+    int in = 1;
+    st.insert({a[0].bt, a[0].id});
+    int prev = a[0].id, pres = -1;
+    while (!st.empty()) {
+		curr++;
+		auto ix = st.begin();
+		pres = (*ix).second;
+		if (pres != prev) swwi++;
+		prev = pres;
+		//cout << (*ix).second << ' ';
+		st.erase(st.begin());
+		if ((*ix).first == 1) {
+			a[(*ix).second - 1].ct = curr;
+		} else {
+			st.insert({(*ix).first - 1, (*ix).second});
+		}
+		while (in < n) {
+			if (a[in].at <= curr) {
+				st.insert({a[in].bt, a[in].id});
+				in++;
+			} else break;
+		}
+    }
+    cout << endl;
+	for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    for (int i = 0; i < n; i++) {
+		cout << a[i].tat << ' ' << a[i].wt << endl;
+    }
+    cout << "context switches = " << swwi << endl;
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+}
+// rr
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct process{
+	int at, bt, ct, tat, wt, id;
+};
+
+process a[100];
+int n, x, y, tq;
+
+int main() {
+	cout << "enter no. of processes = ";
+	cin >> n;
+	cout << "enter at - bt\n";
+	for (int i = 0; i < n; i++) {
+		cin >> x >> y;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].id = i + 1;
+	}
+	cout << "enter tq = ";
+	cin >> tq;
+	queue<pair<int, int> > q;
+	for (int i = 0; i < n; i++) {
+		q.push({a[i].bt, a[i].id});
+	}
+	int curr = 0;
+	while (!q.empty()) {
+		auto ix = q.front();
+		q.pop();
+		if (ix.first <= tq) {
+            curr += ix.first;
+            a[ix.second - 1].ct = curr;
+		} else {
+			curr += tq;
+			q.push({ix.first - tq, ix.second});
+		}
+	}
+	for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    for (int i = 0; i < n; i++) {
+		cout << a[i].tat << ' ' << a[i].wt << endl;
+    }
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+}
+// priority non-pre
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct process{
+	int id, at, bt, wt, tat, pr;
+};
+
+process a[100];
+
+bool comp(process a, process b) {
+	if (a.at < b.at) return 1;
+	return 0;
+}
+
+int main() {
+	cout << "enter no. of processes = ";
+	cin >> n;
+	cout << "enter at - bt - priority\n";
+	for (int i = 0; i < n; i++) {
+		cin >> x >> y >> z;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].pr = z;
+		a[i].id = i + 1;
+	}
+	sort(a, a + n, comp);
+    set<pair<int, int> > st;
+    st.insert({a[0].pr, a[0].id});
+    int curr = 0;
+    int in = 1;
+    while (!st.empty()) {
+		auto ix = st.begin();
+		st.erase(st.begin());
+		curr += a[(*ix).second - 1].bt;
+		a[(*ix).second - 1].ct = curr;
+		while (in < n) {
+			if (a[in].at <= curr) {
+				st.insert({a[in].pr, a[in].id});
+				in++;
+			} else break;
+		}
+    }
+    for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+}
+// priority pre
+#include <bits/stdc++.h>
+
+using namespace std;
+
+struct process{
+	int id, at, bt, wt, tat, pr;
+};
+
+process a[100];
+
+bool comp(process a, process b) {
+	if (a.at < b.at) return 1;
+	return 0;
+}
+
+int main() {
+	cout << "enter no. of processes = ";
+	cin >> n;
+	cout << "enter at - bt - priority\n";
+	for (int i = 0; i < n; i++) {
+		cin >> x >> y >> z;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].pr = z;
+		a[i].id = i + 1;
+	}
+	sort(a, a + n, comp);
+    set<pair<int, pair<int, int> > > st;
+    st.insert({a[0].pr, {a[0].bt, a[0].id}});
+    int curr = 0;
+    int in = 1;
+    while (!st.empty()) {
+		curr++;
+		auto ix = st.begin();
+		st.erase(st.begin());
+		if ((*ix).second.first == 1) {
+			a[(*ix).second.second - 1] = curr;
+		} else {
+            st.insert({(*ix).first, {(*ix).second.first - 1, (*ix).second.second}});
+		}
+		while (in < n) {
+			if (a[in].at <= curr) {
+				st.insert({a[in].pr, a[in].id});
+				in++;
+			} else break;
+		}
+    }
+    for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+}
