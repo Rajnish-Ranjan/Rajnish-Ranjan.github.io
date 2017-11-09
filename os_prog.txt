@@ -1,0 +1,689 @@
+
+// FIRST COME FIRST SERVE
+#include <bits/stdc++.h>
+using namespace std;
+struct process{
+	int id, at, bt, ct, tat, wt;
+};
+process a[100];
+int n;
+bool comp(process a, process b) {
+	if (a.at < b. at) return true;
+	if (a.id < b.id) return true;
+	return false;
+}
+int main() {
+	cout << "Enter no. of process = ";
+	cin >> n;
+	int x, y;
+	cout << "enter at - bt\n";
+	for (int i = 0; i < n; i++) {
+		cin >> x >> y;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].id = i + 1;
+	}
+    sort (a, a + n, comp);
+    int curr = 0;
+    for (int i = 0; i < n; i++) {
+		a[i].ct = curr + a[i].bt;
+        curr = a[i].ct;
+    }
+    for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+	return 0;
+}
+
+
+
+// SHORTEST JOB FIRST
+#include <bits/stdc++.h>
+using namespace std;
+struct process{
+	int id, at, bt, ct, tat, wt;
+};
+bool comp(process a, process b) {
+	if (a.at < b.at) return 1;
+	return 0;
+}
+int n, x, y;
+process a[100];
+int main() {
+	cout << "Enter no. of processes = ";
+	cin >> n;
+    cout << "Enter at - bt\n";
+    for (int i = 0; i < n; i++) {
+		cin >> x >> y;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].id = i + 1;
+    }
+    sort(a, a + n, comp);
+    set<pair<int, int> > st;
+    int in = 1;
+    st.insert({a[0].bt, a[0].id});
+    int curr = a[0].at;
+    while (!st.empty()) {
+        auto ix = st.begin();
+        st.erase(st.begin());
+		a[(*ix).second - 1].ct = curr + (*ix).first;
+		curr = a[(*ix).second - 1].ct;
+		while (in < n) {
+			if (a[in].at <= curr) {
+				st.insert({a[in].bt, a[in].id});
+				in++;
+			} else break;
+		}
+    }
+    for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+}
+
+
+
+// SMALLEST RESPONSE TIME FIRST
+#include <bits/stdc++.h>
+using namespace std;
+struct process{
+	int at, bt, ct, tat, wt, id;
+};
+bool comp(process a, process b) {
+	if (a.at < b.at) return 1;
+	return 0;
+}
+process a[100];
+int n, x, y, swwi;
+int main() {
+	cout << "Enter no. of processes = ";
+	cin >> n;
+	for (int i = 0; i < n; i++) {
+		cin >> x >> y;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].id = i + 1;
+	}
+	sort (a, a + n, comp);
+    int curr = 0;
+    set<pair<int, int> > st;
+    int in = 1;
+    st.insert({a[0].bt, a[0].id});
+    int prev = a[0].id, pres = -1;
+    while (!st.empty()) {
+		curr++;
+		auto ix = st.begin();
+		pres = (*ix).second;
+		if (pres != prev) swwi++;
+		prev = pres;
+		//cout << (*ix).second << ' ';
+		st.erase(st.begin());
+		if ((*ix).first == 1) {
+			a[(*ix).second - 1].ct = curr;
+		} else {
+			st.insert({(*ix).first - 1, (*ix).second});
+		}
+		while (in < n) {
+			if (a[in].at <= curr) {
+				st.insert({a[in].bt, a[in].id});
+				in++;
+			} else break;
+		}
+    }
+    cout << endl;
+	for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    for (int i = 0; i < n; i++) {
+		cout << a[i].tat << ' ' << a[i].wt << endl;
+    }
+    cout << "context switches = " << swwi << endl;
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+}
+
+
+
+// ROUND ROBIN
+#include <bits/stdc++.h>
+using namespace std;
+struct process{
+	int at, bt, ct, tat, wt, id;
+};
+process a[100];
+int n, x, y, tq;
+int main() {
+	cout << "enter no. of processes = ";
+	cin >> n;
+	cout << "enter at - bt\n";
+	for (int i = 0; i < n; i++) {
+		cin >> x >> y;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].id = i + 1;
+	}
+	cout << "enter tq = ";
+	cin >> tq;
+	queue<pair<int, int> > q;
+	for (int i = 0; i < n; i++) {
+		q.push({a[i].bt, a[i].id});
+	}
+	int curr = 0;
+	while (!q.empty()) {
+		auto ix = q.front();
+		q.pop();
+		if (ix.first <= tq) {
+            curr += ix.first;
+            a[ix.second - 1].ct = curr;
+		} else {
+			curr += tq;
+			q.push({ix.first - tq, ix.second});
+		}
+	}
+	for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    for (int i = 0; i < n; i++) {
+		cout << a[i].tat << ' ' << a[i].wt << endl;
+    }
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+}
+
+
+
+// PRIORITY NON-PREEMPTIVE
+#include <bits/stdc++.h>
+using namespace std;
+struct process{
+	int id, at, bt, wt, tat, pr;
+};
+process a[100];
+bool comp(process a, process b) {
+	if (a.at < b.at) return 1;
+	return 0;
+}
+int main() {
+	cout << "enter no. of processes = ";
+	cin >> n;
+	cout << "enter at - bt - priority\n";
+	for (int i = 0; i < n; i++) {
+		cin >> x >> y >> z;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].pr = z;
+		a[i].id = i + 1;
+	}
+	sort(a, a + n, comp);
+    set<pair<int, int> > st;
+    st.insert({a[0].pr, a[0].id});
+    int curr = 0;
+    int in = 1;
+    while (!st.empty()) {
+		auto ix = st.begin();
+		st.erase(st.begin());
+		curr += a[(*ix).second - 1].bt;
+		a[(*ix).second - 1].ct = curr;
+		while (in < n) {
+			if (a[in].at <= curr) {
+				st.insert({a[in].pr, a[in].id});
+				in++;
+			} else break;
+		}
+    }
+    for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+}
+
+
+
+// PRIORITY PREEMPTIVE
+#include <bits/stdc++.h>
+using namespace std;
+struct process{
+	int id, at, bt, wt, tat, pr;
+};
+process a[100];
+bool comp(process a, process b) {
+	if (a.at < b.at) return 1;
+	return 0;
+}
+int main() {
+	cout << "enter no. of processes = ";
+	cin >> n;
+	cout << "enter at - bt - priority\n";
+	for (int i = 0; i < n; i++) {
+		cin >> x >> y >> z;
+		a[i].at = x;
+		a[i].bt = y;
+		a[i].pr = z;
+		a[i].id = i + 1;
+	}
+	sort(a, a + n, comp);
+    set<pair<int, pair<int, int> > > st;
+    st.insert({a[0].pr, {a[0].bt, a[0].id}});
+    int curr = 0;
+    int in = 1;
+    while (!st.empty()) {
+		curr++;
+		auto ix = st.begin();
+		st.erase(st.begin());
+		if ((*ix).second.first == 1) {
+			a[(*ix).second.second - 1] = curr;
+		} else {
+            st.insert({(*ix).first, {(*ix).second.first - 1, (*ix).second.second}});
+		}
+		while (in < n) {
+			if (a[in].at <= curr) {
+				st.insert({a[in].pr, a[in].id});
+				in++;
+			} else break;
+		}
+    }
+    for (int i = 0; i < n; i++) {
+		a[i].tat = a[i].ct - a[i].at;
+		a[i].wt = a[i].tat - a[i].bt;
+    }
+    int x1 = 0, x2 = 0;
+    for (int i = 0; i < n; i++) {
+		x1 += a[i].tat;
+		x2 += a[i].wt;
+    }
+    cout << "Average tat = " << (1.0 * x1) / n << endl;
+    cout << "Average wt = " << (1.0 * x2) / n << endl;
+}
+
+
+
+// PRODUCER CONSUMER
+#include<bits/stdc++.h>
+using namespace std;
+int BUFFER_SIZE;
+int cur_size;
+queue <int> buffer;
+void producer()
+{	int item;		
+	item = rand()%BUFFER_SIZE;
+	if(cur_size==BUFFER_SIZE)
+	{	cout<<"BUFFER IS FULL !!!";		}
+	else
+	{	cur_size++;
+		buffer.push(item);
+		cout<<item<<" inserted into BUFFER successfully !!!";
+	}	 
+	cout<<endl;
+}
+void consumer()
+{	int item;
+	if(!cur_size)
+		cout<<"BUFFER IS EMPTY !!!";
+	else
+	{	cur_size--;
+		item=buffer.front();
+		buffer.pop();
+		cout<<item<<" removed from BUFFER successfully !!!";
+	}
+	cout<<endl;
+}
+void show_buf()
+{	int item;	
+	for(int i=0;i<cur_size;i++)
+	{	item=buffer.front();
+		buffer.pop();
+		cout<<item<<" ";
+		buffer.push(item);
+	}
+	cout<<endl;
+}
+int main()
+{	cin>>BUFFER_SIZE;
+	int ch;
+	do{
+		cout<<"\n1. PRODUCER\n2. CONSUMER\n3. SHOW BUFFER\n4. EXIT\n";
+		cin>>ch;
+		switch(ch)
+		{	case 1: producer();	break;
+			case 2: consumer(); break;
+			case 4: break;
+			case 3: show_buf();	break;
+		}
+	}while(ch!=4);
+	cout<<"\nProgram has been terminated\n";
+	return 0;		
+}	
+
+
+
+// HIGHEST RESPONSE RATIO SCHEDULING
+#include<bits/stdc++.h>
+using namespace std;
+struct process
+{	int at,bt,tat,wt;
+	int id;
+};
+int tim;
+bool cmp(const process &a, const process &b)
+{	if(a.at<b.at)
+		return true;
+	else if(a.at==b.at)
+		return a.id<b.id;
+	return false;
+}
+bool com(const process &a, const process &b)
+{	float x=(tim-a.at+a.bt)/a.bt;
+	float y=(tim-b.at+b.bt)/b.bt;
+	return x>y;
+}
+int main()
+{	int n;
+	cin>>n;
+	process p[n];
+	for(int i=0;i<n;i++)
+	{	cin>>p[i].at>>p[i].bt;
+		p[i].id=i;
+	}		
+	float total_tat=0.0,total_wt=0.0;
+	sort(p,p+n,cmp);
+	for(int i=0;i<n;i++)
+	{	cout<<p[i].id<<" ";
+		tim=max(tim,p[i].at);
+		tim+=p[i].bt;
+		int j;
+		for(j=i+1;j<n;j++)
+		{	if(p[j].at>tim)
+				break;
+		}
+		p[i].wt=tim-p[i].at;	total_wt+=p[i].wt;
+		p[i].tat=p[i].wt+p[i].bt;	total_tat+=p[i].tat;
+		sort(p+i+1,p+j,com);
+	}
+	cout<<"\nAvg. TAT: "<<total_tat/n;
+	cout<<"\nAvg. WT : "<<total_wt/n; 
+	return 0;
+}
+
+
+
+// BANKER'S ALGORITHM
+#include<bits/stdc++.h>
+using namespace std;
+int n,m;
+bool check_need_less_work(int *n,int *w,int p)
+{	for(int i=0;i<m;i++)
+	{	if(n[p*m+i]>w[i])
+			return false;
+	}
+	return true;
+}
+int main()
+{	
+	cin>>n>>m;
+	int available[m];
+	cout<<"Available: ";	
+	for(int i=0;i<m;i++)
+		cin>>available[i];
+	int Maxi[n][m],Allocate[n][m],Need[n*m];
+	cout<<"Maximum:\n ";	
+	for(int i=0;i<n;i++)
+	{	for(int j=0;j<m;j++)
+			cin>>Maxi[i][j];
+	}
+	cout<<"Allocated: \n";	
+	for(int i=0;i<n;i++)
+	{	for(int j=0;j<m;j++)
+			cin>>Allocate[i][j];
+	}	
+	for(int i=0;i<n;i++)
+	{	for(int j=0;j<m;j++)
+			Need[i*m+j]=Maxi[i][j]-Allocate[i][j];
+	}
+	int work[m];
+	bool finish[n];
+	//initialise finish(i) = false
+	memset(finish,false,sizeof(finish));	
+	//initialise work = available
+	for(int i=0;i<m;i++)
+		work[i]=available[i];
+	cout<<"\nThe Terminated Processes are: \n";
+	while(true)
+	{	int i;
+		for(i=0;i<n;i++)
+		{	bool check=check_need_less_work(Need,work,i);
+			if(finish[i]==false and check==true)
+				break;
+		}
+		if(i==n)
+			break;
+		else
+		{	cout<<i<<" ";
+			for(int j=0;j<m;j++)
+			{	work[j]+=Allocate[i][j];
+			}
+			finish[i]=true;
+		}
+	}
+	vector<int> uns;
+	for(int i=0;i<n;i++)
+	{	if(!finish[i])
+			uns.push_back(i);
+	}
+	if(uns.size())
+	{	cout<<"\nThe process yet to be completed: ";		
+		for(int i=0;i<uns.size();i++)
+			cout<<uns[i]<<" ";
+		cout<<"\nUnsafe .....\n";
+	}			
+	else
+	{	cout<<"\nSafe ....\n";
+		return 0;
+	}
+	return 0;
+}
+
+
+
+// BEST FIT, WORSE FIT AND FIRST FIT
+#include<bits/stdc++.h>
+using namespace std;
+void first_fit(int [],int [],int);
+void best_fit(int [],int [],int);
+void worst_fit(int [],int [],int);
+int main()
+{	int n;
+	cin>>n;	
+	int memory[n],process[n];
+	for(int i=0;i<n;i++)
+		cin>>memory[i];
+	for(int i=0;i<n;i++)
+	{	cin>>process[i];
+	}
+	first_fit(memory,process,n);
+	best_fit(memory,process,n);
+	worst_fit(memory,process,n);	
+	return 0;	
+}
+void first_fit(int memory[],int process[],int n)
+{	map<int,int> ans;	
+	bool allocated[n];
+	memset(allocated,false,sizeof(allocated));
+	for(int i=0;i<n;i++)
+		ans[i]=-1;	
+	for(int i=0;i<n;i++)
+	{	int j,temp=process[i];
+		for(j=0;j<n;j++)
+		{	if(memory[j]>=temp and allocated[j]==false)
+				break;
+		}
+		if(j<n)	{allocated[j]=true;
+		ans[i]=j;	}
+	}
+	cout<<"FIRST FIT: \n";
+	for(int i=0;i<n;i++)
+	{	if(ans[i]>=0)	cout<<ans[i]<<" ";
+		else	cout<<"NA ";
+	}	
+	cout<<endl;
+	return;
+}
+void best_fit(int memory[],int process[],int n)
+{	map<int,int> ans;	
+	bool allocated[n];
+	memset(allocated,false,sizeof(allocated));
+	for(int i=0;i<n;i++)
+		ans[i]=-1;	
+	for(int i=0;i<n;i++)
+	{	int j,min_index=-1,temp=process[i];
+		for(j=0;j<n;j++)
+		{	if(memory[j]>=temp and allocated[j]==false)
+			{	if(min_index==-1 or memory[j]<memory[min_index])
+					min_index=j;
+			}
+		}
+		if(min_index>0)	{allocated[min_index]=true;
+		ans[i]=min_index;	}
+	}
+	cout<<"BEST FIT: \n";
+	for(int i=0;i<n;i++)
+	{	if(ans[i]>=0)	cout<<ans[i]<<" ";
+		else	cout<<"NA ";
+	}	
+	cout<<endl;
+	return;
+}
+void worst_fit(int memory[],int process[],int n)
+{	map<int,int> ans;	
+	bool allocated[n];
+	memset(allocated,false,sizeof(allocated));
+	for(int i=0;i<n;i++)
+		ans[i]=-1;	
+	for(int i=0;i<n;i++)
+	{	int j,max_index=-1,temp=process[i];
+		for(j=0;j<n;j++)
+		{	if(memory[j]>=temp and allocated[j]==false)
+			{	if(max_index==-1 or memory[j]>memory[max_index])
+					max_index=j;
+			}
+		}
+		if(max_index>0)	{allocated[max_index]=true;
+		ans[i]=max_index;	}
+	}
+	cout<<"WORST FIT: \n";
+	for(int i=0;i<n;i++)
+	{	if(ans[i]>=0)	cout<<ans[i]<<" ";
+		else	cout<<"NA ";
+	}	
+	cout<<endl;
+	return;
+}
+
+// SRTF WITH I/O TIME AND CPU TIME
+#include<bits/stdc++.h>
+using namespace std;
+struct process
+{
+  int pid,at,ct,tat,wt,bt,pt,fio,sio;
+  process() { };
+  void assign(int x,int y,int z,int u,int v)
+  { 
+   pid = x;
+   at = y;
+   bt = z;
+   pt = z;
+   fio = u;
+   sio = v;
+  }
+};
+class cmp
+{
+public:
+bool operator() (process a, process b)
+{
+  if(a.pt!=b.pt) return a.pt > b.pt;
+  else return a.pid > b.pid;
+}
+};
+int main()
+{
+   int n,x,y,time=INT_MAX,count=0,u,v;
+   cout<<"Enter number of processes : ";
+   cin>>n;
+   double atat=0,awt=0;
+   struct process p[n],temp;
+   int isp[n];
+   for(int i=0;i<n;i++)
+   {
+   cin>>x>>u>>y>>v;
+   p[i].assign(i,x,y,u,v);
+   isp[i] = 0;
+   time = min(time,x+u);
+   }
+   priority_queue<process,vector<process>,cmp> q;
+   cout<<setw(10)<<"PID"<<setw(10)<<"CT"<<setw(10)<<"TAT"<<setw(10)<<"WT"<<endl;
+   while(count!=n)
+  {
+    for(int i=0;i<n;i++)
+    if(!isp[i] && (p[i].at+p[i].fio<=time))
+    {
+     isp[i] = 1;
+     q.push(p[i]);
+    }
+    time++;
+    temp = q.top();
+    q.pop();
+    temp.pt--;
+    if(temp.pt<=0)
+    {
+     count++;
+     p[temp.pid].ct = time+p[temp.pid].sio;
+     p[temp.pid].tat = time+p[temp.pid].sio - p[temp.pid].at;
+     p[temp.pid].wt = p[temp.pid].tat - p[temp.pid].bt;
+     cout<<setw(10)<<p[temp.pid].pid<<setw(10)<<p[temp.pid].ct<<setw(10)<<p[temp.pid].tat;
+     cout<<setw(10)<<p[temp.pid].wt<<endl;
+     atat += p[temp.pid].tat;
+     awt += p[temp.pid].wt;
+    }
+    else q.push(temp);
+  }
+  cout<<"\nAverage turn around time : "<<atat/n<<endl<<"Average waiting time : "<<awt/n<<endl;
+  return 0;
+}
+os_prog.txt
+Open with
+Displaying os_prog.txt.
