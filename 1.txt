@@ -1,0 +1,888 @@
+/  SHELL SCRIPTING /
+--------------------------------------------------------------------------
+/ ADD /
+
+echo "Enter two no"
+read a b
+sum=`expr $a + $b`
+echo $sum
+
+
+/ AVG /
+
+echo "enter no of data to find Average"
+read n
+i=0
+sum=0
+prod=1
+while [ $i -lt $n ] 
+do
+read x
+sum=`expr $sum + $x`
+prod=`expr $prod \* $x`
+i=`expr $i + 1`
+done
+avg=`expr $sum / $n`
+echo "average =$avg\nproduct=$prod"
+
+
+/ ODD EVEN /
+
+echo "enter no to check even or odd"
+read a
+a=`expr $a % 2`
+if [ $a -eq 0 ]
+then
+echo "given no is even\n"
+else
+echo "given no is odd"
+fi
+
+
+/ FIB /
+
+echo "enter no to find fibnocii"
+read n
+ans=1
+if [ $n -eq 0 ] 
+then
+echo "fibnocci series of $n is: $ans"
+elif [ $n -eq 1 ]
+then
+echo "fibnocci series of $n is: $ans $ans"
+else
+echo "fibnocci series of $n is: \n$ans \n$ans  "
+a0=1
+a1=1
+i=2
+while [ $i -le $n ]
+do
+ans=`expr $a0 + $a1`
+a0=$a1
+a1=$ans
+echo  "$ans "
+i=`expr $i + 1`
+done
+fi
+
+
+
+
+/ SWAP /
+
+echo "enter two no"
+read a b
+echo "initially a=$a b=$b"
+a=`expr $a + $b`
+b=`expr $a - $b`
+a=`expr $a - $b`
+echo "finally a=$a b=$b"
+
+
+
+/  CPU SCHEDULING /
+--------------------------------------------------------------------------
+/  FCFS/
+
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+struct process{
+        int ID;
+        int AT;
+        int BT;
+};        
+bool compare(struct process A, struct process B){
+        if(A.AT < B.AT){
+                return true;
+          }
+         else if(A.AT == B.AT){
+               if(A.BT < B.BT){
+                        return true;
+                }
+       
+                        }
+                return false;
+}
+
+int main(){
+        int num;
+        cout << "Enter Number of process" << endl;
+        cin >> num;
+        vector<struct process> P(num);
+        cout << "Enter the Pid AT and BT" << endl;
+        for(int i = 0; i < num; i++){
+            cin >> P[i].ID >> P[i].AT >> P[i].BT;
+            }
+            sort(P.begin(), P.end(),compare);
+        vector<int> CT(num);
+        vector<int> TAT(num);
+        vector<int> WT(num);
+        int time = 0;
+        for(int i = 0; i < num; i++){
+                if(time < P[i].AT)
+                        time = P[i].AT;
+                time += P[i].BT;
+                int j = P[i].ID;
+                CT[j] = time;
+                TAT[j] = CT[j] - P[i].AT;
+                WT[j] = TAT[j] - P[i].BT;
+               }
+       float averageTAT = 0;
+       float averageWT = 0;
+       for(int i = 0; i < num; i++){
+                averageTAT += TAT[i];
+                averageWT += WT[i];
+           }
+           averageTAT = averageTAT/num;
+           averageWT = averageWT/num;
+           cout << "averageTAT = " << averageTAT<< "  averageWT = " <<averageWT << endl; 
+      return 0;
+      }            
+               
+                
+-------------------------------------------------------------------------------
+/ SJF /
+
+#include<iostream>
+#include<algorithm>
+#include<vector>
+using namespace std;
+
+struct process{
+        int ID;
+        int AT;
+        int BT;
+};        
+bool compare(struct process A, struct process B){
+        if(A.BT < B.BT){
+                return true;
+          }
+         else if(A.BT == B.BT){
+               if(A.AT < B.AT){
+                        return true;
+                }
+       
+                        }
+                return false;
+}
+
+int main(){
+        int num;
+        cout << "Enter Number of process" << endl;
+        cin >> num;
+        vector<struct process> P(num);
+        cout << "Enter the ID, AT and BT" << endl;
+        for(int i = 0; i < num; i++){
+            cin >> P[i].ID >> P[i].AT >> P[i].BT;
+            }
+            sort(P.begin() + 1, P.end(),compare);
+       
+        vector<int> CT(num);
+        vector<int> TAT(num);
+        vector<int> WT(num);
+        int time = P[0].AT;
+            time += P[0].BT;
+            CT[0] = time;
+            TAT[0] = CT[0] - P[0].AT;
+            WT[0] = TAT[0] - P[0].BT;
+        for(int i = 1; i < num; i++){
+                time += P[i].BT;
+                int j = P[i].ID;
+                CT[j] = time;
+                TAT[j] = CT[j] - P[i].AT;
+                WT[j] = TAT[j] - P[i].BT;
+               }
+       float averageTAT = 0;
+       float averageWT = 0;
+       for(int i = 0; i < num; i++){
+                averageTAT += TAT[i];
+                averageWT += WT[i];
+           }
+           averageTAT = averageTAT/num;
+           averageWT = averageWT/num;
+           cout << "averageTAT = " << averageTAT<< "  averageWT = " <<averageWT << endl; 
+      return 0;
+      }            
+               
+                
+-------------------------------------------------------------------------
+/ PRIORITY PREMPTIVE /
+#include<bits/stdc++.h>
+using namespace std ;
+struct ReadyQueue
+	{
+	  int pid ;
+	  int at, bt, ct, wt, tat, pr;
+      int tag;
+
+	}q[10];
+
+int n;
+
+
+int  main()
+{
+
+    cout<<"enter number of processes : " ;
+          int n ;
+          cin>>n;
+          int temp=0;
+          int time  = 0;
+          int TotalTat = 0;
+          int TotalWt =0 ;
+          int maxp ;
+          cout<<"enter processes id's : \n";
+          	  for(int i=0;i<n;i++)
+          	    	cin>>q[i].pid ;
+          cout<<"enter arrival time of processes : \n";
+            	for(int i=0;i<n;i++)
+            	     cin>>q[i].at;
+          cout<<"enter burst time  of processes : \n";
+          for(int i=0;i<n;i++)
+            {
+             cin>>q[i].bt ;
+             temp+=q[i].bt ;
+             q[i].tag=0;
+             }
+
+         cout<<"enter priorities of processes : \n";
+         	for(int i=0;i<n;i++)
+         		cin>>q[i].pr ;
+
+         		for(int i=0;i<n-1;i++)
+       		{
+       			for(int j=i+1;j<n;j++)
+       			{
+       				if(q[i].at>q[j].at)
+       				 	{
+       				 	  struct  ReadyQueue temp ;
+       				 	    temp=q[i] ;
+       				 	    q[i]=q[j] ;
+       				 	    q[j]=temp ;
+       				 	}
+
+			}
+		}
+      q[9].pr = -9999;
+     cout<<"PID\t"<<"AT\t"<<"BT\t"<<"CT\t"<<"TAT\t"<<"WT\t"<<"PRI\n";
+       for(time =q[0].at; time < temp;)
+      {
+            maxp = 9;
+            for(int i = 0; i < n; i++)
+            {
+                  if(q[i].at <= time && q[i].tag != 1 && q[i].pr > q[maxp].pr)
+                  {
+                        maxp = i;
+                  }
+            }
+            time = time + q[maxp].bt;
+            q[maxp].ct = time;
+             q[maxp].tat = q[maxp].ct - q[maxp].at;
+            q[maxp].wt = q[maxp].tat - q[maxp].bt;
+
+            q[maxp].tag = 1;
+            TotalWt+=q[maxp].wt;
+            TotalTat+=q[maxp].tat;
+
+            cout<<q[maxp].pid<<"\t"<<q[maxp].at<<"\t"<<q[maxp].bt<<"\t"<<q[maxp].ct<<"\t"<<q[maxp].tat<<"\t"<<q[maxp].wt<<"\t"<<q[maxp].pr<<endl ;
+      }
+
+      cout<<"\n" ;
+
+         cout<<"average waiting time : "<<(float)TotalWt/n<<endl ;
+         cout<<"average turn around time : "<<(float)TotalTat/n<<endl;
+         return 0;
+
+}
+
+----------------------------------------------------------------
+/ PRIORITY NON PRIMPTIVE /
+
+#include<bits/stdc++.h>
+using namespace std;
+struct process{
+	int pri,pid,at,bt,ct,tat,wt,rt,flag;
+	process(){
+		this->flag=false;
+	}
+};
+int next(vector<process>p,int ct)
+{
+	int n=p.size();
+	int index=-1,max_p=0;
+	for(int i=0;i<n;i++)
+	{
+		if(!p[i].flag&&p[i].at<=ct)
+		{
+			if(p[i].pri>max_p)
+			{
+				index=i;
+				max_p=p[i].pri;
+			}
+		}
+	}
+	return index;
+}
+int main()
+{
+	int n;
+	cout<<"enter no of process:";
+	cin>>n;
+	vector<process>p(n);
+	cout<<"enter pri pid at bt:";
+	
+	for(int i=0;i<n;i++)
+	{
+		cin>>p[i].pri>>p[i].pid>>p[i].at>>p[i].bt;
+	}
+	int ct=0;
+	float avg_wt=0,avg_tat=0;
+	vector<pair<int,int> >gun;
+	for(int i=0;i<n;i++)
+	{   
+		int ind=next(p,ct);
+		if(ind!=-1){
+		gun.push_back(make_pair(p[ind].pid,ind));
+		p[ind].flag=true;
+		p[ind].rt=ct;
+		ct=ct+p[ind].bt;
+		p[ind].ct=ct;
+		p[ind].tat=p[ind].ct-p[ind].at;
+		p[ind].wt=p[ind].tat-p[ind].bt;
+		avg_wt+=p[ind].wt;
+		avg_tat+=p[ind].tat;
+	    }
+	    else
+	    {
+	    	ct++;
+	    	i--;
+		}
+	}
+	cout<<"gantt chart:";
+	for(int i=0;i<gun.size();i++)
+	  cout<<gun[i].first<<" ";
+	  cout<<endl;
+	cout<<"pri\tpid\tat\tbt\tct\ttat\twt\trt\n";
+	for(int j=0;j<gun.size();j++)
+	{   int i=gun[j].second;
+		cout<<p[i].pri<<"\t";
+		cout<<p[i].pid<<"\t";
+		cout<<p[i].at<<"\t";
+		cout<<p[i].bt<<"\t";
+		cout<<p[i].ct<<"\t";
+		cout<<p[i].tat<<"\t";
+		cout<<p[i].wt<<"\t";
+		cout<<p[i].rt<<"\t";
+		cout<<endl;
+	}
+	avg_wt=avg_wt/n;
+	avg_tat=avg_tat/n;
+	cout<<"average waiting time:"<<avg_wt<<endl;
+	cout<<"average tat time:"<<avg_tat<<endl;
+}
+
+-------------------------------------------------------------------------
+/ ROUND ROBIN /
+#include<bits/stdc++.h>
+using namespace std;
+int wt[105],rem_bt[105],ft[105],rt[105];
+struct process{
+    int id,at,bt,tat;
+};
+bool cmp(process a,process b){
+        return a.at<b.at;
+}
+bool cmp1(process a,process b){
+        return a.id<b.id;
+}
+int main(){
+    int cs = -1 ;
+    int n,quant,i;
+    cout<<"enter the no. of processes & quantum value: ";
+    cin>>n>>quant;
+    vector<process> v(n);
+    cout<<"enter the process id,arrival time & burst time: ";
+    for(i=0;i<n;i++)
+        cin>>v[i].id>>v[i].at>>v[i].bt;
+cout<<"Sequence of execution:"<<endl;
+    sort(v.begin(),v.end(),cmp);
+for(i=0;i<n;i++)
+        rem_bt[v[i].id]=v[i].bt;
+int done=0,t=0,j=0;
+    queue<process> q;
+    while(j<n&&v[j].at<=t)
+        q.push(v[j++]);
+    while(done<n){
+        if(!q.empty()){
+            process tp=q.front();
+            q.pop();
+            int id=tp.id;          
+cout << id << "-> " ; cs++ ;
+            if(rem_bt[id]==tp.bt)
+                rt[id]=t-tp.at;
+            if(rem_bt[id]>quant){
+                rem_bt[id]-=quant;
+                t+=quant;
+            }
+            else{
+                t+=rem_bt[id];
+                rem_bt[id]=0;
+                done++;
+                ft[id]=t;
+                wt[id]=ft[id]-tp.at-tp.bt;
+            }
+            while(j<n&&v[j].at<=t)
+                q.push(v[j++]);
+            if(rem_bt[id])
+                q.push(tp);
+        }
+        else{
+            t++;
+            while(j<n&&v[j].at<=t)
+                q.push(v[j++]);
+        }
+    }
+    int totTT=0,totWT=0,totRT=0;
+    cout << "END" <<endl ;
+    cout<<"ID\tAT\tBT\tFT\tTAT\tWT\tRT\n";
+    sort(v.begin(),v.end(),cmp1);
+    for(i=0;i<n;i++){
+        int id=v[i].id;
+        v[i].tat=ft[id]-v[i].at;
+        cout<<v[i].id<<'\t'<<v[i].at<<'\t'<<v[i].bt<<'\t'<<ft[id]<<'\t'<<v[i].tat<<'\t'<<wt[id]<<'\t'<<rt[id]<<endl;
+        totWT+=wt[id],totTT+=v[i].tat,totRT+=rt[id];
+    }
+    cout<<"Avg. TAT: "<<totTT/(double)n<<endl;
+    cout<<"Avg. WT: "<<totWT/(double)n<<endl;
+    cout<<"No. of context switch: "<<cs<<endl;
+    cout<<"Throughput : "<<n/(double)t<<endl;
+    }
+
+-------------------------------------------------------------
+/  SRTF /
+#include<bits/stdc++.h>
+using namespace std;
+int wt[105],rem_bt[105],ft[105],rt[105];
+struct process{
+    int id,at,bt,tat,wt,ft,rem_bt;
+};
+bool cmp(process a,process b){
+        return a.at<b.at;
+}
+bool cmp1(process a,process b){
+        return a.id<b.id;
+}
+int main(){
+    int past = 0 ;    
+    int n,quant=1,i,j;int cs = 0;
+    cout<<"enter the no. of processes: ";
+    cin>>n;
+int flag[n] ;
+int restime[n];
+for(int i = 0 ; i < n ;i++) flag[i] = 0 ;
+    vector<process> v(n);
+    cout<<"enter the process id,arrival time & burst time: ";
+    for(i=0;i<n;i++){
+        cin>>v[i].id>>v[i].at>>v[i].bt;
+        v[i].rem_bt=v[i].bt;
+    }
+    cout <<"\nSEQUENCE of Execution: " <<endl;
+    int done=0,t=0;
+    while(done<n){
+        int min_id=-1,mm=INT_MAX;
+        for(i=0;i<n;i++){
+            if(v[i].at<=t&&v[i].rem_bt!=0&&v[i].rem_bt<mm){
+                mm=v[i].rem_bt;
+                min_id=i;
+            }
+        }
+if(min_id!=-1){
+if(flag[min_id]==0)
+{
+    restime[min_id] = t ;
+    flag[min_id] = 1 ;
+}
+    if(past!=v[min_id].id)   
+                {
+                    cout << v[min_id].id << " -> " ;
+                    past = v[min_id].id;cs ++;
+                }
+            if(v[min_id].rem_bt>quant){
+                    v[min_id].rem_bt-=quant;
+       
+                    t+=quant;
+            }
+            else{
+                    t+=v[min_id].rem_bt;
+                    v[min_id].rem_bt=0;
+                    done++;
+                    v[min_id].ft=t;
+                    v[min_id].wt=v[min_id].ft-v[min_id].at-v[min_id].bt;
+            }
+        }
+        else
+            t++;
+    }
+int totTT=0,totWT=0;
+       cout << "END " <<endl ;
+    cout<<"ID\tAT\tBT\tFT\tTAT\tWT\n";
+    sort(v.begin(),v.end(),cmp1);
+    for(i=0;i<n;i++){
+        v[i].tat=v[i].ft-v[i].at;
+        cout<<v[i].id<<'\t'<<v[i].at<<'\t'<<v[i].bt<<'\t'<<v[i].ft<<'\t'<<v[i].tat<<'\t'<<v[i].wt<<endl;
+        totWT+=v[i].wt,totTT+=v[i].tat;
+    }
+    cout<<"Avg. TAT: "<<totTT/(double)n<<endl;
+    cout<<"Avg. WT: "<<totWT/(double)n<<endl;
+    cout << "Response Time  : " << endl ;
+    for(int i = 0 ; i < n ; i ++ )
+    {
+    cout << i+1 << "->" <<  restime[i]-v[i].at <<endl ; 
+        }
+    cout << "Throughput  : " << n/(double)t <<endl ;
+    cout << "No. of context switch: " << cs-1 << endl ;
+}
+
+-------------------------------------------------------------------
+/BANKER /
+#include<bits/stdc++.h>
+using namespace std;
+struct pro{
+	int maxn[3];
+	int calloc[3];
+	int rem[3];
+};
+pro p[100];
+bool v[100];
+void cal(int n,int z,int a,int b,int c,string ans)
+{
+	if(z==n)
+	{
+		for(int i=0;i<n;i++)
+		cout<<ans[i]<<"->";
+		cout<<endl;
+		return;
+	}
+	for(int j=0;j<n;j++)
+		if(v[j]==false&&p[j].rem[0]<=a&&p[j].rem[1]<=b&&p[j].rem[2]<=c){
+			v[j]=true;
+			int x=j+48;
+			char ch=x;
+		cal(n,z+1,a+p[j].calloc[0],b+p[j].calloc[1],c+p[j].calloc[2],ans+ch);
+		   v[j]=false;
+		}
+	}
+int main(){
+	int n;
+	cout<<"enter the total no. of process:";
+	cin>>n;
+	cout<<"enter the max and need:"<<endl;
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<3;j++)
+		  	cin>>p[i].maxn[j];
+	}
+	cout<<"enter the current allocation"<<endl;
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<3;j++)
+		{
+			cin>>p[i].calloc[j];
+			p[i].rem[j]=p[i].maxn[j]-p[i].calloc[j];
+		}  	
+	}
+	int a,b,c;
+	cout<<"enter the current available value:";
+	cin>>a>>b>>c;
+	string ans="";
+	cal(n,0,a,b,c,ans);      
+			
+}
+----------------------------------------------------------------------
+
+/  PRODUCER CONSUMER  /
+
+#include<stdio.h>
+#include<stdlib.h>
+
+int mutex=1,full=0,empty=3,x=0;
+
+int main(){
+	int n;
+	void producer();
+	void consumer();
+	int wait(int);
+	int signal(int);
+	printf("\n1.Producer\n2.Consumer\n3.Exit");
+	while(1)
+	{
+		printf("\nEnter choice:");
+		scanf("%d",&n);
+		switch(n)
+		{
+			case 1: if((mutex==1)&&(empty!=0))
+			producer();
+			else
+			printf("Buffer is full!!");
+			break;
+			case 2: if((mutex==1)&&(full!=0))
+			consumer();
+			else
+			break;
+			case 3: 
+			exit(0);
+			break;
+			
+		}
+	}
+	return 0;
+
+}
+int wait(int s)
+{
+return (--s);
+}
+int signal(int s)
+{
+	return (++s);
+}
+void producer()
+{
+	mutex=wait(mutex);
+	full=signal(full);
+	empty=wait(empty);
+	x++;
+	printf("\nProducer produces the item %d",x);
+	mutex=signal(mutex);
+}
+void consumer(){
+	mutex=wait(mutex);
+	full=wait(full);
+	empty=signal(empty);
+	printf("\nConsumer consumes item %d,x");
+	x--;
+	mutex=signal(mutex);
+}
+
+-------------------------------------------------------------
+
+/  FIFO /
+
+#include<stdio.h>
+int main()
+{
+int i,j,n,a[50],frame[10],no,k,avail,count=0;
+            printf("\n ENTER THE NUMBER OF PAGES:\n");
+scanf("%d",&n);
+            printf("\n ENTER THE PAGE NUMBER :\n");
+            for(i=1;i<=n;i++)
+            scanf("%d",&a[i]);
+            printf("\n ENTER THE NUMBER OF FRAMES :");
+            scanf("%d",&no);
+for(i=0;i<no;i++)
+            frame[i]= -1;
+                        j=0;
+                        printf("\tref string\t page frames\n");
+for(i=1;i<=n;i++)
+                        {
+                                    printf("%d\t\t",a[i]);
+                                    avail=0;
+                                    for(k=0;k<no;k++)
+if(frame[k]==a[i])
+                                                avail=1;
+                                    if (avail==0)
+                                    {
+                                                frame[j]=a[i];
+                                                j=(j+1)%no;
+                                                count++;
+                                                for(k=0;k<no;k++)
+                                                printf("%d\t",frame[k]);
+}
+                                    printf("\n");
+}
+                        printf("Page Fault Is %d",count);
+                        return 0;
+}
+Output:
+
+ 
+/ LRU /
+             
+#include<stdio.h>
+main()
+{
+int q[20],p[50],c=0,c1,d,f,i,j,k=0,n,r,t,b[20],c2[20];
+printf("Enter no of pages:");
+scanf("%d",&n);
+printf("Enter the reference string:");
+for(i=0;i<n;i++)
+            scanf("%d",&p[i]);
+printf("Enter no of frames:");
+scanf("%d",&f);
+q[k]=p[k];
+printf("\n\t%d\n",q[k]);
+c++;
+k++;
+for(i=1;i<n;i++)
+            {
+                        c1=0;
+                        for(j=0;j<f;j++)
+                        {
+                                    if(p[i]!=q[j])
+                                    c1++;
+                        }
+                        if(c1==f)
+                        {
+                                    c++;
+                                    if(k<f)
+                                    {
+                                                q[k]=p[i];
+                                                k++;
+                                                for(j=0;j<k;j++)
+                                                printf("\t%d",q[j]);
+                                                printf("\n");
+                                    }
+                                    else
+                                    {
+                                                for(r=0;r<f;r++)
+                                                {
+                                                            c2[r]=0;
+                                                            for(j=i-1;j<n;j--)
+                                                            {
+                                                            if(q[r]!=p[j])
+                                                            c2[r]++;
+                                                            else
+                                                            break;
+                                                }
+                                    }
+                                    for(r=0;r<f;r++)
+                                     b[r]=c2[r];
+                                    for(r=0;r<f;r++)
+                                    {
+                                                for(j=r;j<f;j++)
+                                                {
+                                                            if(b[r]<b[j])
+                                                            {
+                                                                        t=b[r];
+                                                                        b[r]=b[j];
+                                                                        b[j]=t;
+                                                            }
+                                                }
+                                    }
+                                    for(r=0;r<f;r++)
+                                    {
+                                                if(c2[r]==b[0])
+                                                q[r]=p[i];
+                                                printf("\t%d",q[r]);
+                                    }
+                                    printf("\n");
+                        }
+            }
+}
+printf("\nThe no of page faults is %d",c);
+}
+
+ 
+/ OPTIMAL /
+             
+   #include<stdio.h>
+    int main()
+   {
+    int no_of_frames, no_of_pages, frames[10], pages[30], temp[10], flag1, flag2, flag3, i, j, k, pos, max, faults = 0;
+    printf("Enter number of frames: ");
+    scanf("%d", &no_of_frames);
+    
+    printf("Enter number of pages: ");
+    scanf("%d", &no_of_pages);
+    
+    printf("Enter page reference string: ");
+    
+    for(i = 0; i < no_of_pages; ++i){
+        scanf("%d", &pages[i]);
+    }
+    
+    for(i = 0; i < no_of_frames; ++i){
+        frames[i] = -1;
+    }
+    
+    for(i = 0; i < no_of_pages; ++i){
+        flag1 = flag2 = 0;
+        
+        for(j = 0; j < no_of_frames; ++j){
+            if(frames[j] == pages[i]){
+                   flag1 = flag2 = 1;
+                   break;
+               }
+        }
+        
+        if(flag1 == 0){
+            for(j = 0; j < no_of_frames; ++j){
+                if(frames[j] == -1){
+                    faults++;
+                    frames[j] = pages[i];
+                    flag2 = 1;
+                    break;
+                }
+            }    
+        }
+        
+        if(flag2 == 0){
+            flag3 =0;
+            
+            for(j = 0; j < no_of_frames; ++j){
+                temp[j] = -1;
+                
+                for(k = i + 1; k < no_of_pages; ++k){
+                    if(frames[j] == pages[k]){
+                        temp[j] = k;
+                        break;
+                    }
+                }
+            }
+            
+            for(j = 0; j < no_of_frames; ++j){
+                if(temp[j] == -1){
+                    pos = j;
+                    flag3 = 1;
+                    break;
+                }
+            }
+            
+            if(flag3 ==0){
+                max = temp[0];
+                pos = 0;
+                
+                for(j = 1; j < no_of_frames; ++j){
+                    if(temp[j] > max){
+                        max = temp[j];
+                        pos = j;
+                    }
+                }                
+            }
+            
+            frames[pos] = pages[i];
+            faults++;
+        }
+        
+        printf("\n");
+        
+        for(j = 0; j < no_of_frames; ++j){
+            printf("%d\t", frames[j]);
+        }
+    }
+    
+    printf("\n\nTotal Page Faults = %d", faults);
+    
+    return 0;
+}
+
+
+/ MRU /
+
+
+IN LRU LINE CHANGE INEQUILITY 
+
+
