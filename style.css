@@ -1,7 +1,7 @@
 .bod{
-  background-image:url(Image/rising.jpg);
-  background-repeat:no-repeat;
-  background-size: 100% 100%;
+  background-image:url(Image/raj.jpg);
+  /*background-repeat:no-repeat;*/
+  background-size: 100% 70%;
 }
 .header{
 	background: #ffffff;
